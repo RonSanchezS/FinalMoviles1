@@ -7,6 +7,7 @@ import com.moviles.proyectomoviles.api.LOGINAPI
 import com.moviles.proyectomoviles.models.LoginResponse
 import com.moviles.proyectomoviles.models.RegisterResponse
 import com.moviles.proyectomoviles.models.Usuario
+import com.moviles.proyectomoviles.models.UsuarioRegister
 import retrofit2.Call
 import retrofit2.Response
 
@@ -46,12 +47,13 @@ object LoginRepository {
 
     }
 
-    fun register(user: Usuario) {
+    fun register(user: UsuarioRegister, listener : onRegisterListener) {
         val retrofit = RetrofitRepository.getRetrofit()
         val loginApi = retrofit.create(LOGINAPI::class.java)
         loginApi.register(user).enqueue(object : retrofit2.Callback<RegisterResponse> {
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
                 Log.d("LoginRepository", "Error: ${t.message}")
+                listener.onRegisterError(t.message.toString())
             }
 
             override fun onResponse(
@@ -59,11 +61,17 @@ object LoginRepository {
                 response: Response<RegisterResponse>
             ) {
                 if (response.isSuccessful) {
+                    listener.onRegisterSuccess(response.body()!!)
                     Log.d("LoginRepository", "Registro exitoso")
                 } else {
                     Log.d("LoginRepository", "Error: ${response.errorBody()}")
                 }
             }
         })
+    }
+
+    interface onRegisterListener {
+        fun onRegisterSuccess(body: RegisterResponse)
+        fun onRegisterError(toString: String)
     }
 }
