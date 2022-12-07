@@ -33,7 +33,7 @@ class ActivityPerfilTrabajador : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_perfil_trabajador)
         setUpIntentValues()
-        setUpListView();
+        setUpListView()
 
 
     }
@@ -61,12 +61,12 @@ class ActivityPerfilTrabajador : AppCompatActivity() {
 
     private fun setUpListeners() {
         btnCotizar.setOnClickListener {
-            //go to cotizar activity
             val intent = Intent(this, ActivityCotizar::class.java)
             intent.putExtra("workerID", workerID)
             startActivity(intent)
         }
         btnLlamar.setOnClickListener {
+
 
             if (ContextCompat.checkSelfPermission(
                     this,
@@ -85,6 +85,7 @@ class ActivityPerfilTrabajador : AppCompatActivity() {
             } else {
                 //You already have permission
                 try {
+                    val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + workerPhone))
                     startActivity(intent)
                 } catch (e: SecurityException) {
                     e.printStackTrace()
@@ -94,7 +95,7 @@ class ActivityPerfilTrabajador : AppCompatActivity() {
     }
 
     private fun setUpIntentValues() {
-        workerID = intent.extras?.getString("workerID") ?: ""
+        workerID = intent.extras?.get("workerID").toString()
         workerName = intent.extras?.getString("workerName") ?: ""
         workerPhone = intent.extras?.getString("workerPhone") ?: ""
         categoryName = intent.extras?.getString("categoryName") ?: ""

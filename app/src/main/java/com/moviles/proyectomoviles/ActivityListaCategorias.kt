@@ -23,7 +23,7 @@ class ActivityListaCategorias : AppCompatActivity(), CategoryRepository.OnGetCat
         setContentView(R.layout.activity_pantalla_principal)
 
         setUpListView()
-        setUpListeners();
+        setUpListeners()
         callCategoriesApi()
     }
 
@@ -36,7 +36,7 @@ class ActivityListaCategorias : AppCompatActivity(), CategoryRepository.OnGetCat
     }
 
     private fun callCategoriesApi() {
-        CategoryRepository.getCategorias(this);
+        CategoryRepository.getCategorias(this)
     }
 
     private fun setUpListView() {
@@ -44,7 +44,6 @@ class ActivityListaCategorias : AppCompatActivity(), CategoryRepository.OnGetCat
         btn = findViewById(R.id.btn)
         btnVerCotizaciones = findViewById(R.id.btnVerCotizaciones)
     }
-
 
     override fun onGetCategories(categories: List<Categories>?) {
         val adapter = CategoryAdapter(categories as ArrayList<Categories>, this)

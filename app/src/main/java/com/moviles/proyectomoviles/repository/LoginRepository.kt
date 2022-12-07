@@ -2,7 +2,6 @@ package com.moviles.proyectomoviles.repository
 
 import android.content.Context
 import android.util.Log
-import com.google.gson.Gson
 import com.moviles.proyectomoviles.api.LOGINAPI
 import com.moviles.proyectomoviles.models.LoginResponse
 import com.moviles.proyectomoviles.models.RegisterResponse
@@ -14,10 +13,10 @@ import retrofit2.Response
 
 object LoginRepository {
     //generate a login with retrofit2
-    fun login(user: Usuario,  context: Context) {
+    fun login(user: Usuario,  context: Context, listener : OnLoginListener) {
         val retrofit = RetrofitRepository.getRetrofit()
         val loginApi = retrofit.create(LOGINAPI::class.java)
-        var token = ""
+
         //make a post request with loginApi.login and pass the user
         loginApi.login(user).enqueue(object : retrofit2.Callback<LoginResponse> {
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
@@ -28,7 +27,8 @@ object LoginRepository {
                 if (response.isSuccessful) {
                     val loginResponse = response.body()
                     Log.d("LoginRepository", "onResponse: ${loginResponse?.access_token}")
-                    token = loginResponse?.access_token.toString()
+                    listener.onLoginSuccess(loginResponse?.access_token)
+                    val token = loginResponse?.access_token.toString()
 
                     //save the token in shared preferences
                     val sharedPreferences = context.getSharedPreferences("token", Context.MODE_PRIVATE)
@@ -36,14 +36,19 @@ object LoginRepository {
                     editor.putString("token", token)
                     editor.apply()
 
-                    val gson = Gson()
-                    val favData = gson.toJson(response.body())
                 } else {
+                    listener.onLoginFailure()
                     Log.d("LoginRepository", "Error: ${response.errorBody()}")
                 }
             }
 
         })
+
+    }
+
+    interface OnLoginListener {
+        fun onLoginSuccess(accessToken: String?)
+        fun onLoginFailure()
 
     }
 

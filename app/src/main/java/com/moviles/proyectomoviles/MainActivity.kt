@@ -3,12 +3,14 @@ package com.moviles.proyectomoviles
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import com.moviles.proyectomoviles.models.Usuario
 import com.moviles.proyectomoviles.repository.LoginRepository
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), LoginRepository.OnLoginListener {
     private lateinit var btnCrearCuenta: Button
     private lateinit var btnIngresar: Button
 
@@ -21,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         setUpListeners()
         //get token from shared preferences
         val token = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("token", null)
+        Toast.makeText(this, "El toke es $token", Toast.LENGTH_LONG).show()
         if (token != null) {
             val intent = Intent(this, ActivityListaCategorias::class.java)
             startActivity(intent)
@@ -35,15 +38,14 @@ class MainActivity : AppCompatActivity() {
         }
         btnIngresar.setOnClickListener {
             //console log the text inside txtEmailLogin and txtPasswordLogin
-            var usuarioTemporal = Usuario(
+            val usuarioTemporal = Usuario(
                 txtEmailLogin.text.toString(),
                 txtPasswordLogin.text.toString(),
                 "test-notification-id"
             )
 
-            LoginRepository.login(usuarioTemporal, this)
-            val intent = Intent(this, ActivityListaCategorias::class.java)
-            startActivity(intent)
+            LoginRepository.login(usuarioTemporal, this, this)
+
 
         }
 
@@ -54,5 +56,20 @@ class MainActivity : AppCompatActivity() {
         btnIngresar = findViewById(R.id.btnIngresar)
         txtEmailLogin = findViewById(R.id.txtEmailLogin)
         txtPasswordLogin = findViewById(R.id.txtPasswordLogin)
+    }
+
+    override fun onLoginSuccess(accessToken: String?) {
+        val intent = Intent(this, ActivityListaCategorias::class.java)
+        val sharedpref = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+        val editor = sharedpref.edit()
+        editor.putString("token", accessToken)
+        editor.apply()
+        startActivity(intent)
+    }
+
+    override fun onLoginFailure() {
+       Log.e("Login", "Login failed")
+
+        Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
     }
 }
