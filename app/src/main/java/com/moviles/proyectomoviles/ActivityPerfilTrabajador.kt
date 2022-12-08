@@ -61,7 +61,7 @@ class ActivityPerfilTrabajador : AppCompatActivity() {
 
     private fun setUpListeners() {
         btnCotizar.setOnClickListener {
-            val intent = Intent(this, ActivityCotizar::class.java)
+            val intent = Intent(this, CotizacionChat::class.java)
             intent.putExtra("workerID", workerID)
             startActivity(intent)
         }
