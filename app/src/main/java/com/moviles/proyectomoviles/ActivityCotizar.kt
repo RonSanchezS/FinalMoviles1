@@ -7,17 +7,20 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.moviles.proyectomoviles.adapters.CotizacionAdapter
+import com.moviles.proyectomoviles.models.CharlaItem
 import com.moviles.proyectomoviles.models.Cotizacion
+import com.moviles.proyectomoviles.repository.ConversacionRepository
 import com.moviles.proyectomoviles.repository.CotizacionRepository
 
 class ActivityCotizar : AppCompatActivity(), CotizacionRepository.CotizacionListener,
-    CotizacionAdapter.onCotizacionClickListener {
-    private lateinit var recyclerCotizaciones : RecyclerView
+    CotizacionAdapter.onCotizacionClickListener, ConversacionRepository.onConversacionGetListener {
+    private lateinit var recyclerCotizaciones: RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cotizar)
         recyclerCotizaciones = findViewById(R.id.recyclerViewCotizaciones)
-        CotizacionRepository.getCotizaciones(this)
+        val token = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("token", "")
+        CotizacionRepository.getCotizaciones(this, token.toString())
     }
 
     override fun onFailure(t: Throwable) {
@@ -40,13 +43,30 @@ class ActivityCotizar : AppCompatActivity(), CotizacionRepository.CotizacionList
         intent.putExtra("idTrabajo", cotizacion.id)
 
         intent.putExtra("estado", cotizacion.status)
-        if (cotizacion.review!=null){
+        if (cotizacion.review != null) {
             intent.putExtra("review", cotizacion.review)
-        }else{
+        } else {
             intent.putExtra("review", 0.0f)
 
         }
 
         startActivity(intent)
+    }
+
+    override fun onCharlaOpen(cotizacion: Cotizacion) {
+        val token = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("token", "")
+        val intent = Intent(this, CotizacionChat::class.java)
+        intent.putExtra("cotizacionID", cotizacion.id)
+        Toast.makeText(this, "Cotizacion ID: ${cotizacion.id}", Toast.LENGTH_SHORT).show()
+        startActivity(intent)
+    }
+
+
+    override fun onConversacionGetError(t: Throwable) {
+        println(t.message)
+    }
+
+    override fun onConversacionGetSuccess(body: List<CharlaItem>) {
+        TODO("Not yet implemented")
     }
 }

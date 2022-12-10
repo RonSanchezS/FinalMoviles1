@@ -23,10 +23,13 @@ RecyclerView.Adapter<CotizacionAdapter.CotizacionViewHolder>()
         val lblEstadoCotizacion = itemView.findViewById<TextView>(R.id.lblEstadoCotizacion)
         val imgTrabajadorCotizacion = itemView.findViewById<ImageView>(R.id.imgTrabajadorCotizacion)
         val btnIniciarMapa = itemView.findViewById<ImageButton>(R.id.btnIniciarMapa)
+        val btnIniciarChat = itemView.findViewById<ImageView>(R.id.btnIniciarChat)
     }
+
 
     interface onCotizacionClickListener {
         fun onCotizacionClick(cotizacion: Cotizacion)
+        fun onCharlaOpen(cotizacion: Cotizacion)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CotizacionViewHolder {
@@ -37,6 +40,9 @@ RecyclerView.Adapter<CotizacionAdapter.CotizacionViewHolder>()
 
     override fun onBindViewHolder(holder: CotizacionViewHolder, position: Int) {
         val cotizacion = data[position]
+        holder.btnIniciarChat.setOnClickListener {
+            listener.onCharlaOpen(cotizacion)
+        }
         holder.itemView.setOnClickListener {
             listener.onCotizacionClick(cotizacion)
         }
@@ -50,16 +56,27 @@ RecyclerView.Adapter<CotizacionAdapter.CotizacionViewHolder>()
             -3 -> holder.lblEstadoCotizacion.text = "Descartado"
             4 -> holder.lblEstadoCotizacion.text = "Calificado"
         }
-        //when click on btnIniciarMapa,
-        holder.btnIniciarMapa.setOnClickListener {
-            val intent = Intent(holder.itemView.context, MapsActivity::class.java)
-            intent.putExtra("latitud", cotizacion.deliveryLatitude)
-            intent.putExtra("longitud", cotizacion.deliveryLongitude)
-          //  println("latitud: ${cotizacion.deliveryLatitude} longitud: ${cotizacion.deliveryLongitude}" )
-          holder.itemView.context.startActivity(intent)
-         Toast.makeText(holder.itemView.context, "Iniciar mapa", Toast.LENGTH_SHORT).show()
-
+        if(cotizacion.deliveryLatitude != null && cotizacion.deliveryLongitude != null){
+            holder.btnIniciarMapa.visibility = View.VISIBLE
+            holder.btnIniciarMapa.setOnClickListener {
+                val intent = Intent(holder.itemView.context, MapsActivity::class.java)
+                intent.putExtra("latitud", cotizacion.deliveryLatitude)
+                intent.putExtra("longitud", cotizacion.deliveryLongitude)
+                holder.itemView.context.startActivity(intent)
+            }
         }
+        else{
+            holder.btnIniciarMapa.visibility = View.GONE
+        }
+//        holder.btnIniciarMapa.setOnClickListener {
+//            val intent = Intent(holder.itemView.context, MapsActivity::class.java)
+//            intent.putExtra("latitud", cotizacion.deliveryLatitude)
+//            intent.putExtra("longitud", cotizacion.deliveryLongitude)
+//          //  println("latitud: ${cotizacion.deliveryLatitude} longitud: ${cotizacion.deliveryLongitude}" )
+//          holder.itemView.context.startActivity(intent)
+//         Toast.makeText(holder.itemView.context, "Iniciar mapa", Toast.LENGTH_SHORT).show()
+//
+//        }
 
         Glide.with(holder.itemView.context).load(cotizacion.worker?.profilePicture).into(holder.imgTrabajadorCotizacion)
 

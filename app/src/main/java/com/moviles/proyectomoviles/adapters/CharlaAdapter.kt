@@ -1,4 +1,6 @@
 package com.moviles.proyectomoviles.adapters
 
-class CharlaAdapter(val data : ) {
+import com.moviles.proyectomoviles.models.CharlaItem
+
+class CharlaAdapter(val data : CharlaItem ) {
 }

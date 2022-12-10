@@ -7,9 +7,9 @@ import retrofit2.http.*
 
 interface CotizacionAPI{
 
-    @Headers("content-type: application/json", "Authorization: Bearer 89|MI8jytv2cqhMLExO9tL3VliwDXgsgrJYp7SLTl5l")
+    @Headers("content-type: application/json")
     @GET("client/works")
-    fun getWorks(): Call<List<Cotizacion>>
+    fun getWorks(@Header("Authorization") token : String): Call<List<Cotizacion>>
 
     @POST("work")
     fun crearNuevaCotizacion(@Body trabajo : Trabajo, @Header("Authorization") token : String) : Call<Trabajo>

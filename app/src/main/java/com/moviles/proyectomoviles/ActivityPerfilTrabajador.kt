@@ -13,9 +13,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.moviles.proyectomoviles.models.Trabajo
+import com.moviles.proyectomoviles.repository.CotizacionRepository
 
 
-class ActivityPerfilTrabajador : AppCompatActivity() {
+class ActivityPerfilTrabajador : AppCompatActivity(),
+    CotizacionRepository.onPostCotizacionListener {
 
     private lateinit var workerID : String
     private lateinit var  workerName : String
@@ -67,6 +70,10 @@ class ActivityPerfilTrabajador : AppCompatActivity() {
             val intent = Intent(this, CotizacionChat::class.java)
             intent.putExtra("workerID", workerID)
             intent.putExtra("cotizacionID", categoryID)
+            val token = getSharedPreferences("token", MODE_PRIVATE).getString("token", "").toString()
+            val trabajo = Trabajo(workerID, categoryID)
+            CotizacionRepository.postCotizacion(trabajo, "Bearer $token", this)
+
             startActivity(intent)
         }
         btnLlamar.setOnClickListener {
@@ -106,5 +113,13 @@ class ActivityPerfilTrabajador : AppCompatActivity() {
         workerImgLink = intent.extras?.getString("workerImgLink") ?: ""
         categoryID = intent.extras?.get("categoryID").toString()
         Toast.makeText(this, "categoryID : $categoryID", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onFailure(t: Throwable) {
+        Toast.makeText(this, "Error al iniciar el chat de cotizar", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onSuccess(body: Trabajo?) {
+        finish()
     }
 }

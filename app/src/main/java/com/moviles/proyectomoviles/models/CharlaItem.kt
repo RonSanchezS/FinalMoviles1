@@ -13,4 +13,7 @@ class CharlaItem(
     @SerializedName("image"      ) var image     : String? = null,
     @SerializedName("user"       ) var user      : Trabajador?   = Trabajador()
 ) {
+    override fun toString(): String {
+        return "CharlaItem(id=$id, workId=$workId, userId=$userId, message=$message, latitude=$latitude, longitude=$longitude, createdAt=$createdAt, image=$image, user=$user)"
+    }
 }

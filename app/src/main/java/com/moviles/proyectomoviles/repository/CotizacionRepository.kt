@@ -9,10 +9,10 @@ import retrofit2.Callback
 import retrofit2.Response
 
 object CotizacionRepository {
-    fun getCotizaciones(listener : CotizacionListener){
+    fun getCotizaciones(listener : CotizacionListener, token : String){
         val retrofit = RetrofitRepository.getRetrofit()
         val service = retrofit.create(CotizacionAPI::class.java)
-        service.getWorks().enqueue(object : Callback<List<Cotizacion>> {
+        service.getWorks("Bearer $token").enqueue(object : Callback<List<Cotizacion>> {
             override fun onFailure(call: Call<List<Cotizacion>>, t: Throwable) {
                 listener.onFailure(t)
             }
