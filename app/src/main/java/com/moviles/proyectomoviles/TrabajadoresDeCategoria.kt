@@ -25,7 +25,7 @@ class TrabajadoresDeCategoria : AppCompatActivity(), CategoryRepository.OnGetCat
         setUpListView();
 
         //get categoryID from extras
-        Toast.makeText(this, intent.getStringExtra("categoryID"), Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this, intent.getStringExtra("categoryID"), Toast.LENGTH_SHORT).show()
          categoryID = intent.extras?.getInt("categoryID")!!
         Toast.makeText(this, categoryID.toString(), Toast.LENGTH_SHORT).show()
         if (categoryID != null) {
