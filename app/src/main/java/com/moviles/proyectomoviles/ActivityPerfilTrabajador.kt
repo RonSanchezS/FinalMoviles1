@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -22,6 +23,8 @@ class ActivityPerfilTrabajador : AppCompatActivity() {
     private lateinit var  categoryName : String
     private lateinit var  workerImgLink : String
 
+    private lateinit var  categoryID : String
+
     private lateinit var btnLlamar : Button
     private lateinit var btnCotizar: Button
 
@@ -34,6 +37,7 @@ class ActivityPerfilTrabajador : AppCompatActivity() {
         setContentView(R.layout.activity_perfil_trabajador)
         setUpIntentValues()
         setUpListView()
+        setUpListeners()
 
 
     }
@@ -55,7 +59,6 @@ class ActivityPerfilTrabajador : AppCompatActivity() {
             .placeholder(R.drawable.ic_launcher_background)
             .into(imgTrabajador)
 
-     setUpListeners()
 
     }
 
@@ -63,6 +66,7 @@ class ActivityPerfilTrabajador : AppCompatActivity() {
         btnCotizar.setOnClickListener {
             val intent = Intent(this, CotizacionChat::class.java)
             intent.putExtra("workerID", workerID)
+            intent.putExtra("cotizacionID", categoryID)
             startActivity(intent)
         }
         btnLlamar.setOnClickListener {
@@ -100,5 +104,7 @@ class ActivityPerfilTrabajador : AppCompatActivity() {
         workerPhone = intent.extras?.getString("workerPhone") ?: ""
         categoryName = intent.extras?.getString("categoryName") ?: ""
         workerImgLink = intent.extras?.getString("workerImgLink") ?: ""
+        categoryID = intent.extras?.get("categoryID").toString()
+        Toast.makeText(this, "categoryID : $categoryID", Toast.LENGTH_SHORT).show()
     }
 }

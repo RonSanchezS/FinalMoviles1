@@ -17,6 +17,7 @@ class TrabajadoresDeCategoria : AppCompatActivity(), CategoryRepository.OnGetCat
     WorkerInsideCategoryAdapter.onWorkerListener {
     private lateinit var txtNombreCategiria : TextView
     private lateinit var lstCategoryWorkers : RecyclerView
+    private  var categoryID : Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trabajadores_de_categoria)
@@ -24,7 +25,9 @@ class TrabajadoresDeCategoria : AppCompatActivity(), CategoryRepository.OnGetCat
         setUpListView();
 
         //get categoryID from extras
-        val categoryID = intent.extras?.getInt("categoryID")
+        Toast.makeText(this, intent.getStringExtra("categoryID"), Toast.LENGTH_SHORT).show()
+         categoryID = intent.extras?.getInt("categoryID")!!
+        Toast.makeText(this, categoryID.toString(), Toast.LENGTH_SHORT).show()
         if (categoryID != null) {
             callCategoriesWithWorkers(categoryID)
         };
@@ -40,7 +43,7 @@ class TrabajadoresDeCategoria : AppCompatActivity(), CategoryRepository.OnGetCat
     }
 
     private fun callCategoriesWithWorkers(int: Int) {
-        CategoryRepository.getCategoriasWithId(int, this)
+        CategoryRepository.getCategoriasWithIds(int, this)
     }
 
 
@@ -69,6 +72,7 @@ class TrabajadoresDeCategoria : AppCompatActivity(), CategoryRepository.OnGetCat
         intent.putExtra("workerID", worker.worker?.id)
         intent.putExtra("workerName", worker.worker?.user?.name)
         intent.putExtra("workerPhone", worker.worker?.phone)
+        intent.putExtra("categoryID", categoryID)
         intent.putExtra("categoryName", intent.extras?.getString("categoryName"))
         intent.putExtra("workerImgLink", worker.worker?.profilePicture)
 

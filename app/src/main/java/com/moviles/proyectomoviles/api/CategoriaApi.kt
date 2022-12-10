@@ -10,11 +10,11 @@ import retrofit2.http.Path
 interface CategoriaApi {
     @Headers("content-type: application/json", "Authorization: Bearer 89|MI8jytv2cqhMLExO9tL3VliwDXgsgrJYp7SLTl5l")
     @GET("categories")
-    fun getCategorias(): Call<List<Categories>>
+    fun getCategoriass(): Call<List<Categories>>
 
     @Headers("content-type: application/json", "Authorization: Bearer 89|MI8jytv2cqhMLExO9tL3VliwDXgsgrJYp7SLTl5l")
     @GET("categories/{id}/workers")
-    fun getCategoriasWithId(@Path("id") id: Int): Call<Categories>
+    fun getCategoriasWithId(@Path ("id") id : Int): Call<Categories>
 
     //post categories manually
     @POST("categories")

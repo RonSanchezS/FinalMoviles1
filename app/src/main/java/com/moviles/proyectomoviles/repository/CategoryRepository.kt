@@ -9,7 +9,7 @@ object CategoryRepository {
     fun getCategorias(listener: OnGetCategoriesListener) {
         val retrofit = RetrofitRepository.getRetrofit()
         val categoriaApi = retrofit.create(CategoriaApi::class.java)
-        categoriaApi.getCategorias().enqueue(object : retrofit2.Callback<List<Categories>> {
+        categoriaApi.getCategoriass().enqueue(object : retrofit2.Callback<List<Categories>> {
             override fun onResponse(
                 call: Call<List<Categories>>,
                 response: Response<List<Categories>>
@@ -21,6 +21,7 @@ object CategoryRepository {
 
             override fun onFailure(call: Call<List<Categories>>, t: Throwable) {
                 println("Error")
+                println("Error ${t.message}")
             }
 
         })
@@ -28,7 +29,7 @@ object CategoryRepository {
 
 
 
-    fun getCategoriasWithId(id: Int, listener: OnGetCategoriesListener) {
+    fun getCategoriasWithIds(id: Int, listener: OnGetCategoriesListener) {
         val retrofit = RetrofitRepository.getRetrofit()
         val categoriaApi = retrofit.create(CategoriaApi::class.java)
         categoriaApi.getCategoriasWithId(id).enqueue(object : retrofit2.Callback<Categories> {
@@ -45,6 +46,8 @@ object CategoryRepository {
 
             override fun onFailure(call: Call<Categories>, t: Throwable) {
                 println("Error")
+                println("Error ${t.message}")
+
             }
 
         })
