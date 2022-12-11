@@ -10,10 +10,10 @@ import retrofit2.Response
 
 object ReviewRepository {
 
-    fun dejarReview(idTrabajo :Int, review : Review){
+    fun dejarReview(idTrabajo :Int, review : Review, token : String){
         val retrofit = RetrofitRepository.getRetrofit()
         val service = retrofit.create(ReviewApi::class.java)
-        service.createReview(idTrabajo, review).enqueue(object : Callback<ResponseBody> {
+        service.createReview(idTrabajo, review, "Bearer $token").enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
                     Log.d("ReviewRepository", "Review enviada")

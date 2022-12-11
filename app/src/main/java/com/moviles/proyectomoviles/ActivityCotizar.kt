@@ -57,7 +57,10 @@ class ActivityCotizar : AppCompatActivity(), CotizacionRepository.CotizacionList
         val token = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("token", "")
         val intent = Intent(this, CotizacionChat::class.java)
         intent.putExtra("cotizacionID", cotizacion.id)
-        Toast.makeText(this, "Cotizacion ID: ${cotizacion.id}", Toast.LENGTH_SHORT).show()
+
+        intent.putExtra("estado", cotizacion.status)
+        intent.putExtra("precio", cotizacion.priceOffer)
+
         startActivity(intent)
     }
 

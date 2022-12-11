@@ -36,16 +36,14 @@ object ConversacionRepository {
         token: String,
         mensaje: Mensaje,
         id: String,
-        listener: onMensajeSendListener
+        listener: onMensajeSendListener2
     ) {
         val retrofit = RetrofitRepository.getRetrofit()
         val conversacionApi = retrofit.create(ConversacionApi::class.java)
         conversacionApi.enviarMensaje("Bearer $token", id, mensaje)
             .enqueue(object : Callback<CharlaItem> {
-                override fun onResponse(
-                    call: Call<CharlaItem>,
-                    response: Response<CharlaItem>
-                ) {
+                override fun onResponse(call: Call<CharlaItem>, response: Response<CharlaItem>) {
+
                     if (response.isSuccessful) {
                         listener.onMensajeSendSuccess(response.body()!!)
                     } else {
@@ -57,20 +55,48 @@ object ConversacionRepository {
                     listener.onMensajeSendError(t)
                 }
 
-
             })
+
+
+
+
+//        conversacionApi.enviarMensaje("Bearer $token", id, mensaje)
+//            .enqueue(object : Callback<CharlaItem> {
+//                override fun onResponse(
+//                    call: Call<CharlaItem>,
+//                    response: Response<CharlaItem>
+//                ) {
+//                    if (response.isSuccessful) {
+//                        listener.onMensajeSendSuccess(response.body()!!)
+//                    } else {
+//                        listener.onMensajeSendError(Throwable("Error al enviar mensaje ${response.code()}"))
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<CharlaItem>, t: Throwable) {
+//                    listener.onMensajeSendError(t)
+//                }
+//
+//
+//            })
+    }
+
+    interface onMensajeSendListener2 {
+        fun onMensajeSendSuccess(body: CharlaItem)
+        fun onMensajeSendError(throwable: Throwable)
+
     }
 
     interface onConversacionGetListener {
         fun onConversacionGetSuccess(mensajes: List<CharlaItem>)
         fun onConversacionGetError(t: Throwable)
     }
-
-    interface onMensajeSendListener {
-         fun onMensajeSendSuccess(body: CharlaItem)
-         fun onMensajeSendError(t: Throwable)
-
-    }
+//
+//    interface onMensajeSendListener {
+//         fun onMensajeSendSuccess(body: CharlaItem)
+//         fun onMensajeSendError(t: Throwable)
+//
+//    }
 
 }
 

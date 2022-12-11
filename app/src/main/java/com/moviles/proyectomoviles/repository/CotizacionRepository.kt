@@ -3,6 +3,8 @@ package com.moviles.proyectomoviles.repository
 import com.moviles.proyectomoviles.api.CategoriaApi
 import com.moviles.proyectomoviles.api.CotizacionAPI
 import com.moviles.proyectomoviles.models.Cotizacion
+import com.moviles.proyectomoviles.models.Instruccion
+import com.moviles.proyectomoviles.models.Mensaje
 import com.moviles.proyectomoviles.models.Trabajo
 import retrofit2.Call
 import retrofit2.Callback
@@ -47,6 +49,58 @@ object CotizacionRepository {
             }
 
         })
+    }
+
+    fun rechazarCotizacion(id: String, token : String, listener : onRechazarCotizacionListener){
+        val retrofit = RetrofitRepository.getRetrofit()
+        val cotizacionApi = retrofit.create(CotizacionAPI::class.java)
+        cotizacionApi.rechazarCotizacion(id.toInt(), "Bearer $token").enqueue(object : Callback<Mensaje>{
+            override fun onResponse(call: Call<Mensaje>, response: Response<Mensaje>) {
+                if (response.isSuccessful){
+                    listener.onSuccess(response.body())
+
+                }else{
+                    listener.onFailure(Throwable("Error al rechazar la cotizacion"))
+                }
+            }
+
+            override fun onFailure(call: Call<Mensaje>, t: Throwable) {
+                listener.onFailure(t)
+            }
+
+        })
+    }
+
+    interface onRechazarCotizacionListener {
+        fun onSuccess(body: Mensaje?)
+        fun onFailure(throwable: Throwable)
+
+    }
+
+    fun aceptarCotizacion(id : String, token : String, instruccion : Instruccion, listener : onAceptarCotizacionListener){
+        val retrofit = RetrofitRepository.getRetrofit()
+        val cotizacionApi = retrofit.create(CotizacionAPI::class.java)
+        cotizacionApi.aceptarCotizacion(id.toInt(), "Bearer $token",instruccion).enqueue(object : Callback<Mensaje>{
+            override fun onResponse(call: Call<Mensaje>, response: Response<Mensaje>) {
+                if (response.isSuccessful){
+                    listener.onSuccess(response.body())
+
+                }else{
+                    listener.onFailure(Throwable("Error al aceptar la cotizacion"))
+                }
+            }
+
+            override fun onFailure(call: Call<Mensaje>, t: Throwable) {
+                listener.onFailure(t)
+            }
+
+        })
+    }
+
+    interface onAceptarCotizacionListener {
+        fun onSuccess(body: Mensaje?)
+        fun onFailure(throwable: Throwable)
+
     }
 
     interface onPostCotizacionListener {

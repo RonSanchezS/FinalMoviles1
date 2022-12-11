@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">ProyectoMoviles</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_seleccionar_ubicacion2">SeleccionarUbicacion2</string>
 </resources>

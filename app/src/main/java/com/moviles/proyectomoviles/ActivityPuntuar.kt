@@ -60,7 +60,11 @@ class ActivityPuntuar : AppCompatActivity() {
             val objetoRating = Review(rating)
             //Here we send the rating to the server
             Toast.makeText(this, "Rating: $objetoRating con trabajo ${idTrabajo.toInt()}" , Toast.LENGTH_SHORT).show()
-            ReviewRepository.dejarReview(idTrabajo.toInt(), objetoRating)
+            val token  = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("token", "")
+       // Toast.makeText(this, "Token: $token", Toast.LENGTH_SHORT).show()
+            if (token != null) {
+                ReviewRepository.dejarReview(idTrabajo.toInt(), objetoRating, token)
+            }
             finish()
         }
     }

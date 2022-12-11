@@ -43,6 +43,30 @@
             android:gravity="right"
             android:text="TextView" />
 
+        <ImageView
+            android:id="@+id/imagenEntrante"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <ImageView
+            android:id="@+id/imagenSaliente"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_gravity="right"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapaEntrante"
+            android:layout_width="205dp"
+            android:layout_height="100dp" />
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapaSaliente"
+            android:layout_width="205dp"
+            android:layout_height="100dp"
+            android:layout_gravity="right" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

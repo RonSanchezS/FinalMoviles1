@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -16,14 +18,10 @@
         android:theme="@style/Theme.ProyectoMoviles"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity
-            android:name=".CotizacionChat"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+
         <!--
+             TODO: Before you run your application, you need a Google Maps API key.
+
              To get one, follow the directions here:
 
                 https://developers.google.com/maps/documentation/android-sdk/get-api-key
@@ -34,8 +32,33 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDE1RrHLI4Fhp8YBAm0mimVCkVmpthmejU" />
+            android:value="YOUR_API_KEY" />
 
+        <activity
+            android:name=".activityAvanzada.SeleccionarUbicacion2"
+            android:exported="false"
+            android:label="@string/title_activity_seleccionar_ubicacion2" />
+        <activity
+            android:name=".activityAvanzada.SeleccionarUbicacion"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".FullScreenImage"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".CotizacionChat"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".MapsActivity"
             android:exported="false"

@@ -14,9 +14,8 @@ import com.moviles.proyectomoviles.MapsActivity
 import com.moviles.proyectomoviles.R
 import com.moviles.proyectomoviles.models.Cotizacion
 
-class CotizacionAdapter(val data : ArrayList<Cotizacion>, val listener : onCotizacionClickListener) :
-RecyclerView.Adapter<CotizacionAdapter.CotizacionViewHolder>()
-{
+class CotizacionAdapter(val data: ArrayList<Cotizacion>, val listener: onCotizacionClickListener) :
+    RecyclerView.Adapter<CotizacionAdapter.CotizacionViewHolder>() {
 
     class CotizacionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val lblNombreCotizacion = itemView.findViewById<TextView>(R.id.lblNombreCotizacion)
@@ -40,6 +39,14 @@ RecyclerView.Adapter<CotizacionAdapter.CotizacionViewHolder>()
 
     override fun onBindViewHolder(holder: CotizacionViewHolder, position: Int) {
         val cotizacion = data[position]
+        Glide
+            .with(holder.itemView.context)
+            .load(cotizacion.client?.profilePicture).placeholder(R.drawable.ic_launcher_background)
+
+            .centerCrop()
+            .into(holder.imgTrabajadorCotizacion)
+
+
         holder.btnIniciarChat.setOnClickListener {
             listener.onCharlaOpen(cotizacion)
         }
@@ -47,7 +54,7 @@ RecyclerView.Adapter<CotizacionAdapter.CotizacionViewHolder>()
             listener.onCotizacionClick(cotizacion)
         }
         holder.lblNombreCotizacion.text = cotizacion.worker?.user?.name ?: "Sin nombre"
-        when(cotizacion.status){
+        when (cotizacion.status) {
             0 -> holder.lblEstadoCotizacion.text = "Pendiente"
             1 -> holder.lblEstadoCotizacion.text = "Ofertada"
             2 -> holder.lblEstadoCotizacion.text = "Aceptada"
@@ -56,7 +63,7 @@ RecyclerView.Adapter<CotizacionAdapter.CotizacionViewHolder>()
             -3 -> holder.lblEstadoCotizacion.text = "Descartado"
             4 -> holder.lblEstadoCotizacion.text = "Calificado"
         }
-        if(cotizacion.deliveryLatitude != null && cotizacion.deliveryLongitude != null){
+        if (cotizacion.deliveryLatitude != null && cotizacion.deliveryLongitude != null) {
             holder.btnIniciarMapa.visibility = View.VISIBLE
             holder.btnIniciarMapa.setOnClickListener {
                 val intent = Intent(holder.itemView.context, MapsActivity::class.java)
@@ -64,8 +71,7 @@ RecyclerView.Adapter<CotizacionAdapter.CotizacionViewHolder>()
                 intent.putExtra("longitud", cotizacion.deliveryLongitude)
                 holder.itemView.context.startActivity(intent)
             }
-        }
-        else{
+        } else {
             holder.btnIniciarMapa.visibility = View.GONE
         }
 //        holder.btnIniciarMapa.setOnClickListener {
@@ -78,7 +84,8 @@ RecyclerView.Adapter<CotizacionAdapter.CotizacionViewHolder>()
 //
 //        }
 
-        Glide.with(holder.itemView.context).load(cotizacion.worker?.profilePicture).into(holder.imgTrabajadorCotizacion)
+        Glide.with(holder.itemView.context).load(cotizacion.worker?.profilePicture)
+            .into(holder.imgTrabajadorCotizacion)
 
         //SEGUIR AQUI DESPUES DE  CLASES, ASIGNAR LOS VALORES A LOS ELEMENTOS Y TERMINAR EL ADAPTER CON LOS DEMAS ELEMENTOS
 
