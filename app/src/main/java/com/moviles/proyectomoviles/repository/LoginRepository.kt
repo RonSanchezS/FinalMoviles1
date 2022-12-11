@@ -3,17 +3,15 @@ package com.moviles.proyectomoviles.repository
 import android.content.Context
 import android.util.Log
 import com.moviles.proyectomoviles.api.LOGINAPI
-import com.moviles.proyectomoviles.models.LoginResponse
-import com.moviles.proyectomoviles.models.RegisterResponse
-import com.moviles.proyectomoviles.models.Usuario
-import com.moviles.proyectomoviles.models.UsuarioRegister
+import com.moviles.proyectomoviles.models.*
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 
 
 object LoginRepository {
     //generate a login with retrofit2
-    fun login(user: Usuario,  context: Context, listener : OnLoginListener) {
+    fun login(user: Usuario, context: Context, listener: OnLoginListener) {
         val retrofit = RetrofitRepository.getRetrofit()
         val loginApi = retrofit.create(LOGINAPI::class.java)
 
@@ -31,7 +29,8 @@ object LoginRepository {
                     val token = loginResponse?.access_token.toString()
 
                     //save the token in shared preferences
-                    val sharedPreferences = context.getSharedPreferences("token", Context.MODE_PRIVATE)
+                    val sharedPreferences =
+                        context.getSharedPreferences("token", Context.MODE_PRIVATE)
                     val editor = sharedPreferences.edit()
                     editor.putString("token", token)
                     editor.apply()
@@ -52,7 +51,7 @@ object LoginRepository {
 
     }
 
-    fun register(user: UsuarioRegister, listener : onRegisterListener) {
+    fun register(user: UsuarioRegister, listener: onRegisterListener) {
         val retrofit = RetrofitRepository.getRetrofit()
         val loginApi = retrofit.create(LOGINAPI::class.java)
         loginApi.register(user).enqueue(object : retrofit2.Callback<RegisterResponse> {
@@ -73,6 +72,33 @@ object LoginRepository {
                 }
             }
         })
+    }
+
+    fun getDatosDeUsuario(token: String, listener: onGetDatosDeUsuarioListener) {
+        val retrofit = RetrofitRepository.getRetrofit()
+        val api = retrofit.create(LOGINAPI::class.java)
+        api.getDatosUsuario(token).enqueue(object : retrofit2.Callback<Trabajador> {
+            override fun onResponse(call: Call<Trabajador>, response: Response<Trabajador>) {
+                if(response.isSuccessful){
+                    listener.onUsuarioEncontrado(response.body())
+                }else{
+                    listener.onErrorUsuario2(response.errorBody())
+                }
+
+            }
+
+            override fun onFailure(call: Call<Trabajador>, t: Throwable) {
+                listener.onErrorUsuario(t)
+            }
+
+        })
+    }
+
+    interface onGetDatosDeUsuarioListener {
+        fun onErrorUsuario(t: Throwable)
+        fun onUsuarioEncontrado(body: Trabajador?)
+        abstract fun onErrorUsuario2(errorBody: ResponseBody?)
+
     }
 
     interface onRegisterListener {

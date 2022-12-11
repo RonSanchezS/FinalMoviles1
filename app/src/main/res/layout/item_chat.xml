@@ -6,24 +6,43 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/txtNombre"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:text="Pedro Picapiedra" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/txtTexto"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
             android:text="TextView"
             tools:text="Este es un texto demasiado largo como para ser considerado multilinea" />
+
+        <TextView
+            android:id="@+id/txtNombreLocal"
+            android:layout_width="199dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:text="No se que" />
+
+        <TextView
+            android:id="@+id/txtTextoLocal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:gravity="right"
+            android:text="TextView" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

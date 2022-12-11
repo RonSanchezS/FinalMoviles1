@@ -7,10 +7,12 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.moviles.proyectomoviles.models.Trabajador
 import com.moviles.proyectomoviles.models.Usuario
 import com.moviles.proyectomoviles.repository.LoginRepository
+import okhttp3.ResponseBody
 
-class MainActivity : AppCompatActivity(), LoginRepository.OnLoginListener {
+class MainActivity : AppCompatActivity(), LoginRepository.OnLoginListener{
     private lateinit var btnCrearCuenta: Button
     private lateinit var btnIngresar: Button
 
@@ -30,6 +32,9 @@ class MainActivity : AppCompatActivity(), LoginRepository.OnLoginListener {
         }
 
     }
+
+    //add on resume function
+
 
     private fun setUpListeners() {
         btnCrearCuenta.setOnClickListener {
@@ -68,8 +73,10 @@ class MainActivity : AppCompatActivity(), LoginRepository.OnLoginListener {
     }
 
     override fun onLoginFailure() {
-       Log.e("Login", "Login failed")
+        Log.e("Login", "Login failed")
 
         Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
     }
+
+
 }

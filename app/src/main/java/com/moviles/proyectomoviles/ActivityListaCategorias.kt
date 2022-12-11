@@ -31,6 +31,12 @@ class ActivityListaCategorias : AppCompatActivity(), CategoryRepository.OnGetCat
         setUpListView()
         setUpListeners()
         callCategoriesApi()
+        getIDFromApi()
+    }
+
+    private fun getIDFromApi() {
+
+
     }
 
     private fun setUpListeners() {
