@@ -53,6 +53,13 @@ class ActivityCotizar : AppCompatActivity(), CotizacionRepository.CotizacionList
         startActivity(intent)
     }
 
+    //add onResume
+    override fun onResume() {
+        super.onResume()
+        val token = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("token", "")
+        CotizacionRepository.getCotizaciones(this, token.toString())
+    }
+
     override fun onCharlaOpen(cotizacion: Cotizacion) {
         val token = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("token", "")
         val intent = Intent(this, CotizacionChat::class.java)
