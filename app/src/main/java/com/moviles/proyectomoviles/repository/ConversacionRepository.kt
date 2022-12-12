@@ -1,12 +1,18 @@
 package com.moviles.proyectomoviles.repository
 
+import android.net.Uri
 import com.moviles.proyectomoviles.CotizacionChat
 import com.moviles.proyectomoviles.api.ConversacionApi
 import com.moviles.proyectomoviles.models.CharlaItem
 import com.moviles.proyectomoviles.models.Mensaje
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
+import java.lang.Exception
 
 object ConversacionRepository {
 
@@ -79,6 +85,46 @@ object ConversacionRepository {
 //
 //
 //            })
+    }
+
+    fun uploadProfilePicture(idCotizacion : String, token : String, fileUri: Uri,listener : onProfilePictureUploadListener) {
+        val retrofit = RetrofitRepository.getRetrofit()
+        val service = retrofit.create(ConversacionApi::class.java)
+        val file = fileUri.path?.let { File(it) }
+        if (file == null) {
+            listener.onProfilePictureFailed(java.lang.Exception("No se pudo obtener el archivo"))
+            return
+        }
+
+        val filePart = MultipartBody.Part.createFormData(
+            "image",
+            file.name,
+            RequestBody.create(MediaType.parse("image/*"), file)
+        )
+        service.uploadProfilePicture(idCotizacion.toInt(), "Bearer $token", filePart).enqueue(
+            object : Callback<Mensaje> {
+                override fun onFailure(call: Call<Mensaje>, t: Throwable) {
+                    listener.onProfilePictureFailed(t as Exception)
+                }
+
+                override fun onResponse(call: Call<Mensaje>, response: Response<Mensaje>) {
+                    if (response.isSuccessful) {
+                        listener.onProfilePictureSuccess(response.body()!!)
+                    } else {
+                        listener.onProfilePictureFailed(java.lang.Exception("Error al subir la imagen"))
+                    }
+                }
+            }
+        )
+
+
+
+    }
+
+    interface onProfilePictureUploadListener {
+        fun onProfilePictureFailed(exception: Exception)
+        fun onProfilePictureSuccess(body: Mensaje)
+
     }
 
     interface onMensajeSendListener2 {

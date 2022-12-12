@@ -1,6 +1,8 @@
 package com.moviles.proyectomoviles
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -9,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.moviles.proyectomoviles.activityAvanzada.SeleccionarUbicacion
@@ -21,12 +24,15 @@ import com.moviles.proyectomoviles.models.Trabajador
 import com.moviles.proyectomoviles.models.Trabajo
 import com.moviles.proyectomoviles.repository.ConversacionRepository
 import com.moviles.proyectomoviles.repository.CotizacionRepository
+import com.moviles.proyectomoviles.repository.ImageController
 import com.moviles.proyectomoviles.repository.LoginRepository
 import okhttp3.ResponseBody
+import java.lang.Exception
 
 class CotizacionChat : AppCompatActivity(), ConversacionRepository.onConversacionGetListener,
     LoginRepository.onGetDatosDeUsuarioListener, ConversacionRepository.onMensajeSendListener2,
-    CotizacionRepository.onRechazarCotizacionListener {
+    CotizacionRepository.onRechazarCotizacionListener,
+    ConversacionRepository.onProfilePictureUploadListener {
 
     private lateinit var recyclerCharla: RecyclerView
 
@@ -44,6 +50,18 @@ class CotizacionChat : AppCompatActivity(), ConversacionRepository.onConversacio
     private lateinit var btnRechazar: Button
     private lateinit var txtPrecioCotizacion: TextView
 
+    private lateinit var imageButton: ImageButton
+    var resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                storeImage(result.data?.data!!)
+            }
+        }
+
+    private fun storeImage(dataUri: Uri) {
+        ImageController.saveImage(this, 1, dataUri)
+    }
+
     private lateinit var cotizacionID: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,16 +69,42 @@ class CotizacionChat : AppCompatActivity(), ConversacionRepository.onConversacio
         setUpContent()
         setUpListeners()
 
+        //set a thread every 5 seconds
+//        val thread = Thread {
+//            while (true) {
+//                Thread.sleep(5000)
+//                runOnUiThread {
+//
+//                }
+//            }
+//        }
+//        thread.start()
+
 
     }
 
+
     private fun setUpListeners() {
+        imageButton.setOnClickListener {
+            ImageController.selectPhotoFromGallery(resultLauncher)
+
+        }
         btnEnviar.setOnClickListener {
+            if(txtInput.text.isEmpty()){
+                sendImage(ImageController.getImage(this))
+                return@setOnClickListener
+            }
             var mensaje = Mensaje(txtInput.text.toString())
             println("TOKEN: $token mensaje $mensaje id $cotizacionID")
             ConversacionRepository.enviarMensaje(token, mensaje, cotizacionID, this)
             txtInput.setText("")
+
         }
+    }
+
+    private fun sendImage(image: Uri) {
+        ConversacionRepository.uploadProfilePicture(cotizacionID, token, image, this)
+
     }
 
     private fun setUpContent() {
@@ -69,6 +113,9 @@ class CotizacionChat : AppCompatActivity(), ConversacionRepository.onConversacio
         txtInput = findViewById(R.id.inputMSJText)
         token = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("token", "").toString()
         id = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("id", "").toString()
+
+
+        imageButton = findViewById(R.id.imageButton)
 
         cotizacionID = intent.extras?.get("cotizacionID").toString()
 
@@ -91,13 +138,13 @@ class CotizacionChat : AppCompatActivity(), ConversacionRepository.onConversacio
                 startActivity(intent)
             }
             btnRechazar.setOnClickListener {
-               CotizacionRepository.rechazarCotizacion(cotizacionID, token, this)
+                CotizacionRepository.rechazarCotizacion(cotizacionID, token, this)
             }
         } else {
             layoutCotizacion.visibility = LinearLayout.GONE
 
         }
-        if (intent.extras?.get("estado")!=1){
+        if (intent.extras?.get("estado") != 1) {
             layoutCotizacion.visibility = LinearLayout.GONE
         }
         LoginRepository.getDatosDeUsuario("Bearer $token", this)
@@ -139,29 +186,35 @@ class CotizacionChat : AppCompatActivity(), ConversacionRepository.onConversacio
 
     override fun onMensajeSendSuccess(body: CharlaItem) {
         //clear txtInput
-        txtInput.setText("xd")
 
-        ConversacionRepository.getMensajesDeConversacion(
-            "Bearer $token",
-            cotizacionID,
-            this@CotizacionChat
-        )
+        ConversacionRepository.getMensajesDeConversacion("Bearer $token", cotizacionID, this)
+        //scroll to the end of the recycler view
 
 
     }
 
     override fun onMensajeSendError(throwable: Throwable) {
-        Toast.makeText(this, "Error al enviar el mensaje", Toast.LENGTH_SHORT).show()
-        println(throwable.message)
+        ConversacionRepository.getMensajesDeConversacion("Bearer $token", cotizacionID, this)
+        //scroll to the end of the recycler view
 
     }
 
     override fun onSuccess(body: Mensaje?) {
-       finish()
+        finish()
     }
 
     override fun onFailure(throwable: Throwable) {
         TODO("Not yet implemented")
+    }
+
+    override fun onProfilePictureFailed(exception: Exception) {
+        ConversacionRepository.getMensajesDeConversacion("Bearer $token", cotizacionID, this)
+
+    }
+
+    override fun onProfilePictureSuccess(body: Mensaje) {
+        ConversacionRepository.getMensajesDeConversacion("Bearer $token", cotizacionID, this)
+
     }
 
 

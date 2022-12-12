@@ -3,13 +3,9 @@ package com.moviles.proyectomoviles.api
 import com.moviles.proyectomoviles.models.CharlaItem
 import com.moviles.proyectomoviles.models.Mensaje
 import com.moviles.proyectomoviles.models.Trabajo
+import okhttp3.MultipartBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.HTTP
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface ConversacionApi {
 
@@ -21,4 +17,8 @@ interface ConversacionApi {
    @POST("work/{id}/chat")
    fun enviarMensaje(@Header("Authorization")token : String, @Path("id") id : String, @Body mensaje : Mensaje) : Call<CharlaItem>
 
-   }
+   @Multipart
+   @POST("work/{id}/chat")
+   fun uploadProfilePicture(@Path("id") id : Int, @Header("Authorization") token : String, @Part filePart : MultipartBody.Part): Call<Mensaje>
+
+}
