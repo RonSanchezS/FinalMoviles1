@@ -10,18 +10,14 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.moviles.proyectomoviles.activityAvanzada.SeleccionarUbicacion
 import com.moviles.proyectomoviles.activityAvanzada.SeleccionarUbicacion2
 import com.moviles.proyectomoviles.adapters.CharlaAdapter
-import com.moviles.proyectomoviles.adapters.CotizacionAdapter
 import com.moviles.proyectomoviles.models.CharlaItem
 import com.moviles.proyectomoviles.models.Mensaje
 import com.moviles.proyectomoviles.models.Trabajador
-import com.moviles.proyectomoviles.models.Trabajo
 import com.moviles.proyectomoviles.repository.ConversacionRepository
 import com.moviles.proyectomoviles.repository.CotizacionRepository
 import com.moviles.proyectomoviles.repository.ImageController
@@ -94,7 +90,7 @@ class CotizacionChat : AppCompatActivity(), ConversacionRepository.onConversacio
                 sendImage(ImageController.getImage(this))
                 return@setOnClickListener
             }
-            var mensaje = Mensaje(txtInput.text.toString())
+            val mensaje = Mensaje(txtInput.text.toString())
             println("TOKEN: $token mensaje $mensaje id $cotizacionID")
             ConversacionRepository.enviarMensaje(token, mensaje, cotizacionID, this)
             txtInput.setText("")
@@ -131,7 +127,7 @@ class CotizacionChat : AppCompatActivity(), ConversacionRepository.onConversacio
 
             layoutCotizacion.visibility = LinearLayout.VISIBLE
             txtPrecioCotizacion.text =
-                "El precio ofertado es: " + intent.extras?.get("precio").toString()
+                "El precio ofertado es: ${(intent.extras?.get("precio").toString())}"
             btnAceptar.setOnClickListener {
                 val intent = Intent(this, SeleccionarUbicacion2::class.java)
                 intent.putExtra("cotizacionID", cotizacionID)
@@ -157,8 +153,8 @@ class CotizacionChat : AppCompatActivity(), ConversacionRepository.onConversacio
         println(t.message)
     }
 
-    override fun onConversacionGetSuccess(body: List<CharlaItem>) {
-        actualizarChat(body)
+    override fun onConversacionGetSuccess(mensajes: List<CharlaItem>) {
+        actualizarChat(mensajes)
     }
 
     private fun actualizarChat(body: List<CharlaItem>) {
@@ -168,7 +164,7 @@ class CotizacionChat : AppCompatActivity(), ConversacionRepository.onConversacio
     }
 
     override fun onErrorUsuario(t: Throwable) {
-        TODO("Not yet implemented")
+        //
     }
 
     override fun onUsuarioEncontrado(body: Trabajador?) {

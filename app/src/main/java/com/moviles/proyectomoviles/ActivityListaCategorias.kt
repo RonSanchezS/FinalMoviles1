@@ -45,7 +45,7 @@ class ActivityListaCategorias : AppCompatActivity(), CategoryRepository.OnGetCat
             startActivity(intent)
         }
         btnBusqueda.setOnClickListener {
-         val textoCategoria =  inputPorBuscar.text.toString()
+            val textoCategoria =  inputPorBuscar.text.toString()
             //filter categorias by textoCategoria
             val categoriasFiltradas = listaCategorias.filter { it.name.contains(textoCategoria) }
             val adapter = CategoryAdapter(categoriasFiltradas as ArrayList<Categories>, this)

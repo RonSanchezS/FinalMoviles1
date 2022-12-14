@@ -3,7 +3,6 @@ package com.moviles.proyectomoviles
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.moviles.proyectomoviles.adapters.CotizacionAdapter
@@ -61,13 +60,10 @@ class ActivityCotizar : AppCompatActivity(), CotizacionRepository.CotizacionList
     }
 
     override fun onCharlaOpen(cotizacion: Cotizacion) {
-        val token = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("token", "")
         val intent = Intent(this, CotizacionChat::class.java)
         intent.putExtra("cotizacionID", cotizacion.id)
-
         intent.putExtra("estado", cotizacion.status)
         intent.putExtra("precio", cotizacion.priceOffer)
-
         startActivity(intent)
     }
 
@@ -76,7 +72,7 @@ class ActivityCotizar : AppCompatActivity(), CotizacionRepository.CotizacionList
         println(t.message)
     }
 
-    override fun onConversacionGetSuccess(body: List<CharlaItem>) {
+    override fun onConversacionGetSuccess(mensajes: List<CharlaItem>) {
         TODO("Not yet implemented")
     }
 }
