@@ -1,10 +1,10 @@
 package com.moviles.proyectomoviles.repository
 
 import android.net.Uri
-import com.moviles.proyectomoviles.CotizacionChat
 import com.moviles.proyectomoviles.api.ConversacionApi
 import com.moviles.proyectomoviles.models.CharlaItem
 import com.moviles.proyectomoviles.models.Mensaje
+import com.moviles.proyectomoviles.models.Ubicacion
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -85,6 +85,34 @@ object ConversacionRepository {
 //
 //
 //            })
+    }
+    fun uploadLocation(ubicacion: Ubicacion, token : String, id: String, listener: onUbicacionListener){
+        val retrofit = RetrofitRepository.getRetrofit()
+        val conversacionApi = retrofit.create(ConversacionApi::class.java)
+        conversacionApi.enviarUbicacion("Bearer $token", id, ubicacion)
+            .enqueue(object : Callback<CharlaItem> {
+                override fun onResponse(
+                    call: Call<CharlaItem>,
+                    response: Response<CharlaItem>
+                ) {
+                    if (response.isSuccessful) {
+                        println(response.body()!!)
+                    } else {
+                        listener.onUbicacionError(Throwable("Error al enviar ubicacion ${response.code()}"))
+                    }
+                }
+
+                override fun onFailure(call: Call<CharlaItem>, t: Throwable) {
+                    println(t.message)
+                }
+
+            })
+    }
+
+    interface onUbicacionListener {
+        fun onUbicacionSuccess(body: CharlaItem)
+        fun onUbicacionError(throwable: Throwable)
+
     }
 
     fun uploadProfilePicture(idCotizacion : String, token : String, fileUri: Uri,listener : onProfilePictureUploadListener) {

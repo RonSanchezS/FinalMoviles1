@@ -1,6 +1,5 @@
 package com.moviles.proyectomoviles.activityAvanzada
 
-import android.content.ContentProviderClient
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -47,7 +46,7 @@ class SeleccionarUbicacion : AppCompatActivity(), OnMapReadyCallback {
 
         mapaIndicaciones = findViewById(R.id.mapaIndicaciones)
         txtInstrucciones = findViewById(R.id.txtInstruccionesDeUbicacion)
-        btnEnviarUbicacion = findViewById(R.id.btnEnviarUbicacion)
+        btnEnviarUbicacion = findViewById(R.id.btnEnviarUbicacionChat)
 
 
     }

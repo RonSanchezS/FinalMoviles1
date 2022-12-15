@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -35,6 +36,8 @@ class ActivityPerfilTrabajador : AppCompatActivity(),
     private lateinit var lblNombreDeCategoria : TextView
     private lateinit var lblNombreTrabajador : TextView
 
+    private lateinit var ratingBar2 : RatingBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_perfil_trabajador)
@@ -51,9 +54,15 @@ class ActivityPerfilTrabajador : AppCompatActivity(),
         imgTrabajador = findViewById(R.id.imgTrabajador)
         lblNombreDeCategoria = findViewById(R.id.lblNombreDeCategoria)
         lblNombreTrabajador = findViewById(R.id.lblNombreTrabajador)
+        ratingBar2 = findViewById(R.id.ratingBar2)
 
         lblNombreDeCategoria.text = categoryName
         lblNombreTrabajador.text = workerName
+
+        val review = intent.getDoubleExtra("review", 0.0)
+
+        ratingBar2.rating = review.toFloat()
+
 
         Glide
             .with(this)

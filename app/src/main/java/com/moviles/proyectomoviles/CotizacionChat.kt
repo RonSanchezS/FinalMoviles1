@@ -5,15 +5,12 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.moviles.proyectomoviles.activityAvanzada.SeleccionarUbicacion2
+import com.moviles.proyectomoviles.activityAvanzada.VerUbicacion
 import com.moviles.proyectomoviles.adapters.CharlaAdapter
 import com.moviles.proyectomoviles.models.CharlaItem
 import com.moviles.proyectomoviles.models.Mensaje
@@ -28,11 +25,12 @@ import java.lang.Exception
 class CotizacionChat : AppCompatActivity(), ConversacionRepository.onConversacionGetListener,
     LoginRepository.onGetDatosDeUsuarioListener, ConversacionRepository.onMensajeSendListener2,
     CotizacionRepository.onRechazarCotizacionListener,
-    ConversacionRepository.onProfilePictureUploadListener {
+    ConversacionRepository.onProfilePictureUploadListener, CharlaAdapter.onClickListenerChat {
 
     private lateinit var recyclerCharla: RecyclerView
 
     private lateinit var btnEnviar: ImageButton
+    private lateinit var btnEnviarUbicacionChat: ImageButton
     private lateinit var txtInput: EditText
 
 
@@ -81,12 +79,17 @@ class CotizacionChat : AppCompatActivity(), ConversacionRepository.onConversacio
 
 
     private fun setUpListeners() {
+        btnEnviarUbicacionChat.setOnClickListener {
+            val intent = Intent(this, SeleccionarUbicacionParaChat::class.java)
+            intent.putExtra("id", cotizacionID)
+            startActivity(intent)
+        }
         imageButton.setOnClickListener {
             ImageController.selectPhotoFromGallery(resultLauncher)
 
         }
         btnEnviar.setOnClickListener {
-            if(txtInput.text.isEmpty()){
+            if (txtInput.text.isEmpty()) {
                 sendImage(ImageController.getImage(this))
                 return@setOnClickListener
             }
@@ -121,7 +124,7 @@ class CotizacionChat : AppCompatActivity(), ConversacionRepository.onConversacio
         btnRechazar = findViewById(R.id.btnRechazarCotizacion)
         txtPrecioCotizacion = findViewById(R.id.txtPrecioCotizacion)
 
-
+        btnEnviarUbicacionChat = findViewById(R.id.btnEnviarUbicacionChat)
 
         if (intent.extras?.get("precio") != null) {
 
@@ -147,7 +150,11 @@ class CotizacionChat : AppCompatActivity(), ConversacionRepository.onConversacio
 
 
     }
-
+//add onresume
+    override fun onResume() {
+        super.onResume()
+        ConversacionRepository.getMensajesDeConversacion(token, cotizacionID, this)
+    }
 
     override fun onConversacionGetError(t: Throwable) {
         println(t.message)
@@ -158,7 +165,7 @@ class CotizacionChat : AppCompatActivity(), ConversacionRepository.onConversacio
     }
 
     private fun actualizarChat(body: List<CharlaItem>) {
-        adapter = CharlaAdapter(body as ArrayList<CharlaItem>, id.toInt())
+        adapter = CharlaAdapter(body as ArrayList<CharlaItem>, id.toInt(), this)
         recyclerCharla.layoutManager = LinearLayoutManager(this)
         recyclerCharla.adapter = adapter
     }
@@ -211,6 +218,16 @@ class CotizacionChat : AppCompatActivity(), ConversacionRepository.onConversacio
     override fun onProfilePictureSuccess(body: Mensaje) {
         ConversacionRepository.getMensajesDeConversacion("Bearer $token", cotizacionID, this)
 
+    }
+
+    override fun onMapClick(itemCharla: CharlaItem) {
+      //  Toast.makeText(this, "Mapa $itemCharla", Toast.LENGTH_SHORT).show()
+        if (itemCharla.latitude != null && itemCharla.longitude != null) {
+            val intent = Intent(this, VerUbicacion::class.java)
+            intent.putExtra("latitud", itemCharla.latitude)
+            intent.putExtra("longitud", itemCharla.longitude)
+            startActivity(intent)
+        }
     }
 
 

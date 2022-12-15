@@ -70,6 +70,13 @@
                 android:layout_weight="1"
                 app:srcCompat="@android:drawable/ic_menu_gallery" />
 
+            <ImageButton
+                android:id="@+id/btnEnviarUbicacionChat"
+                android:layout_width="86dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@android:drawable/ic_menu_mapmode" />
+
             <EditText
                 android:id="@+id/inputMSJText"
                 android:layout_width="336dp"

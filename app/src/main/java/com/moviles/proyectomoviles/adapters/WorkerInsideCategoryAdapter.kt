@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.moviles.proyectomoviles.R
-import com.moviles.proyectomoviles.models.Worker
 import com.moviles.proyectomoviles.models.Workers
 
 class WorkerInsideCategoryAdapter(val data: ArrayList<Workers>, val listener: onWorkerListener) :

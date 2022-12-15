@@ -7,10 +7,10 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.moviles.proyectomoviles.models.Trabajador
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.moviles.proyectomoviles.models.Usuario
 import com.moviles.proyectomoviles.repository.LoginRepository
-import okhttp3.ResponseBody
 
 class MainActivity : AppCompatActivity(), LoginRepository.OnLoginListener{
     private lateinit var btnCrearCuenta: Button
@@ -18,6 +18,8 @@ class MainActivity : AppCompatActivity(), LoginRepository.OnLoginListener{
 
     private lateinit var txtEmailLogin: EditText
     private lateinit var txtPasswordLogin: EditText
+
+    private lateinit var token : String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -30,11 +32,27 @@ class MainActivity : AppCompatActivity(), LoginRepository.OnLoginListener{
             val intent = Intent(this, ActivityListaCategorias::class.java)
             startActivity(intent)
         }
+        setUpFirebase()
+
 
     }
+    private fun setUpFirebase() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("TOKEN","Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
 
-    //add on resume function
+            // Get new FCM registration token
+            token = task.result as String
 
+            // Log and toast
+            Log.d("TOKEN", token)
+            println("TOKEN DE FIREBASE : $token")
+            Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
+        })
+
+    }
 
     private fun setUpListeners() {
         btnCrearCuenta.setOnClickListener {
@@ -46,7 +64,7 @@ class MainActivity : AppCompatActivity(), LoginRepository.OnLoginListener{
             val usuarioTemporal = Usuario(
                 txtEmailLogin.text.toString(),
                 txtPasswordLogin.text.toString(),
-                "test-notification-id"
+                token
             )
 
             LoginRepository.login(usuarioTemporal, this, this)

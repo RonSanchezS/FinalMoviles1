@@ -1,6 +1,5 @@
 package com.moviles.proyectomoviles.repository
 
-import com.moviles.proyectomoviles.api.CategoriaApi
 import com.moviles.proyectomoviles.api.CotizacionAPI
 import com.moviles.proyectomoviles.models.Cotizacion
 import com.moviles.proyectomoviles.models.Instruccion

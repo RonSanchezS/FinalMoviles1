@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.moviles.proyectomoviles.adapters.WorkerInsideCategoryAdapter
 import com.moviles.proyectomoviles.models.Categories
-import com.moviles.proyectomoviles.models.Worker
 import com.moviles.proyectomoviles.models.Workers
 import com.moviles.proyectomoviles.repository.CategoryRepository
 
@@ -68,6 +67,7 @@ class TrabajadoresDeCategoria : AppCompatActivity(), CategoryRepository.OnGetCat
 
     override fun onWorkerClick(worker: Workers) {
         val intent = Intent(this, ActivityPerfilTrabajador::class.java)
+        intent.putExtra("review", worker.worker?.reviewAvg)
 
         intent.putExtra("workerID", worker.worker?.id)
         intent.putExtra("workerName", worker.worker?.user?.name)

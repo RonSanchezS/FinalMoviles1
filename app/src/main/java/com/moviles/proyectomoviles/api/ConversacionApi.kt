@@ -2,7 +2,7 @@ package com.moviles.proyectomoviles.api
 
 import com.moviles.proyectomoviles.models.CharlaItem
 import com.moviles.proyectomoviles.models.Mensaje
-import com.moviles.proyectomoviles.models.Trabajo
+import com.moviles.proyectomoviles.models.Ubicacion
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -16,6 +16,9 @@ interface ConversacionApi {
    //add a message
    @POST("work/{id}/chat")
    fun enviarMensaje(@Header("Authorization")token : String, @Path("id") id : String, @Body mensaje : Mensaje) : Call<CharlaItem>
+
+   @POST("work/{id}/chat")
+   fun enviarUbicacion(@Header("Authorization")token : String, @Path("id") id : String, @Body ubicacion : Ubicacion) : Call<CharlaItem>
 
    @Multipart
    @POST("work/{id}/chat")

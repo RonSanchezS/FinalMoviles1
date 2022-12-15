@@ -11,6 +11,7 @@ import com.moviles.proyectomoviles.models.Cotizacion
 import com.moviles.proyectomoviles.repository.ConversacionRepository
 import com.moviles.proyectomoviles.repository.CotizacionRepository
 
+
 class ActivityCotizar : AppCompatActivity(), CotizacionRepository.CotizacionListener,
     CotizacionAdapter.onCotizacionClickListener, ConversacionRepository.onConversacionGetListener {
     private lateinit var recyclerCotizaciones: RecyclerView
@@ -40,7 +41,6 @@ class ActivityCotizar : AppCompatActivity(), CotizacionRepository.CotizacionList
         intent.putExtra("idUsuario", cotizacion.clientId)
         intent.putExtra("idTrabajador", cotizacion.workerId)
         intent.putExtra("idTrabajo", cotizacion.id)
-
         intent.putExtra("estado", cotizacion.status)
         if (cotizacion.review != null) {
             intent.putExtra("review", cotizacion.review)

@@ -2,4 +2,9 @@
     <string name="app_name">ProyectoMoviles</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="title_activity_seleccionar_ubicacion2">SeleccionarUbicacion2</string>
+    <string name="default_notification_channel_id">\"ID_NOTIFICACION\"</string>
+    <string name="fcm_message">\"MSJ\"</string>
+    <string name="title_activity_seleccionar_ubicacion_para_chat">SeleccionarUbicacionParaChat
+    </string>
+    <string name="title_activity_ver_ubicacion">VerUbicacion</string>
 </resources>

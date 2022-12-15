@@ -6,7 +6,6 @@ import android.widget.Button
 import android.widget.RatingBar
 import android.widget.Toast
 import com.moviles.proyectomoviles.models.Review
-import com.moviles.proyectomoviles.repository.CotizacionRepository
 import com.moviles.proyectomoviles.repository.ReviewRepository
 
 class ActivityPuntuar : AppCompatActivity() {

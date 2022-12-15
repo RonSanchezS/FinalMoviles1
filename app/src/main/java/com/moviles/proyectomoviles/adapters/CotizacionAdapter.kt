@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.moviles.proyectomoviles.MapsActivity
@@ -38,6 +37,9 @@ class CotizacionAdapter(val data: ArrayList<Cotizacion>, val listener: onCotizac
     }
 
     override fun onBindViewHolder(holder: CotizacionViewHolder, position: Int) {
+
+
+
         val cotizacion = data[position]
         Glide
             .with(holder.itemView.context)
